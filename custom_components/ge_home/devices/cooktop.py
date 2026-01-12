@@ -41,15 +41,14 @@ class CooktopApi(ApplianceApi):
 
         if cooktop_config == ErdCooktopConfig.PRESENT:
             # attempt to get the cooktop status using legacy status
-            cooktop_status_erd = ErdCode.COOKTOP_STATUS
-            cooktop_status: CooktopStatus | None = self.try_get_erd_value(
-                ErdCode.COOKTOP_STATUS
-            )
-
-            # if we didn't get it, try using the new version
-            if cooktop_status is None:
+                # attempt to get cooktop status, preferring extended data when present
                 cooktop_status_erd = ErdCode.COOKTOP_STATUS_EXT
-                cooktop_status = self.try_get_erd_value(ErdCode.COOKTOP_STATUS_EXT)
+                cooktop_status: CooktopStatus | None = self.try_get_erd_value(ErdCode.COOKTOP_STATUS_EXT)
+
+                # if we didn't get it, fall back to the legacy status code
+                if cooktop_status is None:
+                    cooktop_status_erd = ErdCode.COOKTOP_STATUS
+                    cooktop_status = self.try_get_erd_value(ErdCode.COOKTOP_STATUS)
 
             # if we got a status through either mechanism, we can add the entities
             if cooktop_status is not None:
