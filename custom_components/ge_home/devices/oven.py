@@ -21,6 +21,7 @@ from ..entities import (
     GeErdSensor, 
     GeErdTimerSensor,
     GeErdBinarySensor, 
+    GeCooktopStatusBinarySensor,
     GeErdPropertySensor,
     GeErdPropertyBinarySensor,
     GeOven, 
@@ -120,7 +121,7 @@ class OvenApi(ApplianceApi):
 
             # if we got a status through either mechanism, we can add the entities
             if cooktop_status is not None:
-                cooktop_entities.append(GeErdBinarySensor(self, cooktop_status_erd))
+                cooktop_entities.append(GeCooktopStatusBinarySensor(self, cooktop_status_erd))
             
                 for (k, v) in cooktop_status.burners.items():
                     if v.exists:
